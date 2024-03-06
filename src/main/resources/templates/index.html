@@ -35,14 +35,16 @@
         function sendPrivateMessage() {
             var text = document.getElementById('privateText').value;
             var to = document.getElementById('to').value;
+            var from = document.getElementById('username').value;
+
             stompClient.send("/app/private", {},
-                JSON.stringify({'text':text, 'to':to}));
+                JSON.stringify({'text':text, 'to':to, 'from':from}));
         }
 
         function show(message) {
             var response = document.getElementById('messages');
             var p = document.createElement('p');
-            p.innerHTML= "message: "  + message.text;
+            p.innerHTML= "From:" + message.from + " message: "  + message.text;
             response.appendChild(p);
         }
 
@@ -51,7 +53,7 @@
 <body>
 <div>
     <div th:if="${#request.userPrincipal != null}">
-        <p th:text="'Welcome, ' + ${#request.userPrincipal.name} + '!'" ></p>
+        <p id="username" th:text="${#request.userPrincipal.name}"></p>
     </div>
         <button id="sendMessage" onclick="sendMessage();">Send</button>
         <input type="text" id="text" placeholder="Text"/>
